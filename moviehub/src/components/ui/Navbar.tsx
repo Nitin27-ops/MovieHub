@@ -1,0 +1,58 @@
+//@ts-nocheck
+import React, { useContext, useState } from "react"
+import logo from "../../assets/logo.png"
+import Genres from "../Genres"
+import { Input } from "./input"
+import {Link,useNavigate} from "react-router-dom"
+import { SearchResultContext } from "../../context/searchResult.context"
+ 
+
+const Navbar = () => {
+  const navigate=useNavigate();
+const {searchText,setSearchText}=useContext(SearchResultContext);
+
+const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+  setSearchText(e.target.value);
+  navigate(`/search/${e.target.value}`);
+}
+
+const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+  e.preventDefault();
+  navigate(`/search/${searchText}`);
+
+  if(e.target.value.length===0){
+     navigate(`/movies`);
+  }
+}
+
+  return ( 
+    <div className="flex justify-between md:px-10 sm:px-5 items-center gap-3 text-xl my-3">
+        <img src={logo} alt="logo" 
+        className="md:h-14 sm:h-9 h-9 hover:opacity-80 cursor-pointer" 
+        onClick={()=>navigate("/")}
+        />
+
+        <div className="flex gap-3 items-center">
+           <form onSubmit={handleSubmit}>
+            <Input type="text"  placeholder="Search" className="border-gray-500 rounded-2xl md:w-fit sm:w-[30vw]"
+            value={searchText}
+            onChange={handleChange}
+            />
+           </form>
+           <div className="md:block sm:hidden hidden">
+            <div className="flex gap-6 items-center">
+                <Genres/>
+                <Link to={'/movies'}>
+                <div>Movies</div>
+                </Link>
+                <Link to={'/tvshows'}>
+                <div>TvShows</div>
+                </Link>
+            </div>
+           </div>
+        </div>
+    </div>
+  )
+}
+
+export default Navbar
